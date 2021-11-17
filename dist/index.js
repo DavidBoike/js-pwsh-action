@@ -8465,28 +8465,20 @@ async function run () {
 
         //let commandArg = '". ' + setupPath + '"';
 
-        core.info('Spawning process');
         let pwsh = spawn('pwsh', ['-command', setupPath]);
-
-        core.info('Setting up stdout/stderr');
 
         pwsh.stdout.setEncoding('utf8');
         pwsh.stdout.on('data', (data) => {
-            core.info('data received from PS');
-            core.info('PS Data: ' + data);
-            console.log('PSData Logged: ' + data);
-            core.info('end data received');
+            console.log(data);
         });
 
         pwsh.stderr.setEncoding('utf8');
         pwsh.stderr.on('data', (data) => {
-            core.error('error');
-            core.error(data);
+            console.error(data);
         });
 
         pwsh.stdin.end();
 
-        core.info('Waiting for exit');
         const exitCode = await new Promise( (resolve, reject) => {
             pwsh.on('close', resolve);
         });
