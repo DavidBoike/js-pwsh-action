@@ -11,10 +11,10 @@ async function run () {
         let setupPath = path.join(path.dirname(__dirname), 'setup.ps1');
         core.info('Setup path: ' + setupPath);
 
-        let commandArg = '". ' + setupPath + '"';
+        //let commandArg = '". ' + setupPath + '"';
 
         core.info('Spawning process');
-        let pwsh = spawn('pwsh', ['-command', commandArg]);
+        let pwsh = spawn('pwsh', ['-command', setupPath]);
 
         core.info('Setting up stdout/stderr');
 
