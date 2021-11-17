@@ -8470,7 +8470,7 @@ async function run () {
         pwsh.stdout.setEncoding('utf8');
         pwsh.stdout.on('data', (data) => {
             if (data) {
-                console.log(data.trim());
+                console.log('"' + data.trim() + '"');
             }
         });
 
