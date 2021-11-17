@@ -8461,6 +8461,8 @@ try {
 
     // pwsh -command 
 
+    console.log(JSON.stringify(github));
+
     let setupPath = path.join(github.context.action_path, 'setup.ps1');
     console.log('Setup path: ' + setupPath);
 
@@ -8471,11 +8473,11 @@ try {
     ls.stdout.on('data', (data) => {
         console.log(data);
     });
-    
+
     ls.stderr.on('data', (data) => {
         console.error(data);
     });
-    
+
     ls.on('close', (code) => {
         if (code !== 0) {
             core.setFailed(`pwsh exited with code ${code}`);

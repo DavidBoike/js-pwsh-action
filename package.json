@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepare": "ncc build index.js -o dist --license licenses.txt && ncc build cleanup.js -o dist/cleanup"
   },
   "repository": {
     "type": "git",
