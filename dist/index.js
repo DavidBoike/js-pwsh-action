@@ -8467,15 +8467,15 @@ try {
 
     let pwsh = spawn('pwsh', ['-command', commandArg]);
 
-    ls.stdout.on('data', (data) => {
+    pwsh.stdout.on('data', (data) => {
         console.log(data);
     });
 
-    ls.stderr.on('data', (data) => {
+    pwsh.stderr.on('data', (data) => {
         console.error(data);
     });
 
-    ls.on('close', (code) => {
+    pwsh.on('close', (code) => {
         if (code !== 0) {
             core.setFailed(`pwsh exited with code ${code}`);
         }
