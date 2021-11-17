@@ -21,7 +21,9 @@ async function run () {
         pwsh.stdout.setEncoding('utf8');
         pwsh.stdout.on('data', (data) => {
             core.info('data received from PS');
-            core.info(data);
+            core.info('PS Data: ' + data);
+            console.log('PSData Logged: ' + data);
+            core.info('end data received');
         });
 
         pwsh.stderr.setEncoding('utf8');
@@ -29,6 +31,8 @@ async function run () {
             core.error('error');
             core.error(data);
         });
+
+        pwsh.stdin.end();
 
         core.info('Waiting for exit');
         const exitCode = await new Promise( (resolve, reject) => {
