@@ -8455,37 +8455,42 @@ const github = __nccwpck_require__(3134);
 const path = __nccwpck_require__(1017);
 const { spawn } = __nccwpck_require__(2081);
 
-try {
+async function run () {
+    try {
+        const testInput = core.getInput('test-input');
+        core.info('Test Input: ' + testInput);
 
-    const testInput = core.getInput('test-input');
-    core.info('Test Input: ' + testInput);
+        let setupPath = path.join(path.dirname(__dirname), 'setup.ps1');
+        core.info('Setup path: ' + setupPath);
 
-    let setupPath = path.join(path.dirname(__dirname), 'setup.ps1');
-    core.info('Setup path: ' + setupPath);
+        let commandArg = '". ' + setupPath + '"';
 
-    let commandArg = '". ' + setupPath + '"';
+        let pwsh = spawn('pwsh', ['-command', commandArg]);
 
-    let pwsh = spawn('pwsh', ['-command', commandArg]);
+        pwsh.stdout.setEncoding('utf8');
+        pwsh.stdout.on('data', (data) => {
+            console.log(data);
+        });
 
-    pwsh.stdout.setEncoding('utf8');
-    pwsh.stdout.on('data', (data) => {
-        console.log(data);
-    });
+        pwsh.stderr.setEncoding('utf8');
+        pwsh.stderr.on('data', (data) => {
+            console.error(data);
+        });
 
-    pwsh.stderr.setEncoding('utf8');
-    pwsh.stderr.on('data', (data) => {
-        console.error(data);
-    });
+        const exitCode = await new Promise( (resolve, reject) => {
+            pwsh.on('close', resolve);
+        });
 
-    pwsh.on('close', (code) => {
-        if (code !== 0) {
-            core.setFailed(`pwsh exited with code ${code}`);
+        if (exitCode) {
+            core.setFailed(`pwsh exited with code ${exitCode}`);
         }
-    });
 
-} catch (error) {
-    core.setFailed(error.message);
+    } catch (error) {
+        core.setFailed(error.message);
+    }
 }
+
+run();
 })();
 
 module.exports = __webpack_exports__;
