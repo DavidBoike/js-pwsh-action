@@ -17,12 +17,12 @@ async function run () {
 
         pwsh.stdout.setEncoding('utf8');
         pwsh.stdout.on('data', (data) => {
-            console.log(data);
+            core.info(data);
         });
 
         pwsh.stderr.setEncoding('utf8');
         pwsh.stderr.on('data', (data) => {
-            console.error(data);
+            core.error(data);
         });
 
         const exitCode = await new Promise( (resolve, reject) => {
