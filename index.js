@@ -6,31 +6,32 @@ const { spawn } = require('child_process');
 try {
 
     const testInput = core.getInput('test-input');
+    core.info('Test Input: ' + testInput);
 
-    // pwsh -command 
+    core.info(__dirname);
 
-    console.log(JSON.stringify(github));
+    //console.log(JSON.stringify(github));
 
-    let setupPath = path.join(github.context.action_path, 'setup.ps1');
-    console.log('Setup path: ' + setupPath);
+    // let setupPath = path.join(github.context.action_path, 'setup.ps1');
+    // console.log('Setup path: ' + setupPath);
 
-    let commandArg = '". ' + setupPath + '"';
+    // let commandArg = '". ' + setupPath + '"';
 
-    let pwsh = spawn('pwsh', ['-command', commandArg]);
+    // let pwsh = spawn('pwsh', ['-command', commandArg]);
 
-    ls.stdout.on('data', (data) => {
-        console.log(data);
-    });
+    // ls.stdout.on('data', (data) => {
+    //     console.log(data);
+    // });
 
-    ls.stderr.on('data', (data) => {
-        console.error(data);
-    });
+    // ls.stderr.on('data', (data) => {
+    //     console.error(data);
+    // });
 
-    ls.on('close', (code) => {
-        if (code !== 0) {
-            core.setFailed(`pwsh exited with code ${code}`);
-        }
-    });
+    // ls.on('close', (code) => {
+    //     if (code !== 0) {
+    //         core.setFailed(`pwsh exited with code ${code}`);
+    //     }
+    // });
 
 } catch (error) {
     core.setFailed(error.message);
