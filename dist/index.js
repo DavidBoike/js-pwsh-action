@@ -8462,7 +8462,7 @@ try {
 
     core.info(__dirname);
 
-    let ps1Path = path.join(path.basename(__dirname), 'setup.ps1');
+    let ps1Path = path.join(path.dirname(__dirname), 'setup.ps1');
     core.info(ps1Path);
 
     //console.log(JSON.stringify(github));
