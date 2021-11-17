@@ -8467,10 +8467,12 @@ try {
 
     let pwsh = spawn('pwsh', ['-command', commandArg]);
 
+    pwsh.stdout.setEncoding('utf8');
     pwsh.stdout.on('data', (data) => {
         console.log(data);
     });
 
+    pwsh.stderr.setEncoding('utf8');
     pwsh.stderr.on('data', (data) => {
         console.error(data);
     });
