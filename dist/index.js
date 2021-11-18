@@ -1749,7 +1749,7 @@ const testInput = core.getInput('test-input');
 
 runPwsh(setupPath, {
     name: 'David',
-    param2: testInput
+    testInput: testInput
 });
 })();
 
