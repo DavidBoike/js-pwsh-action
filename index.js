@@ -1,6 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const path = require('path');
+const readline = require('readline/promises');
 const { spawn } = require('child_process');
 
 async function run () {
@@ -16,17 +17,15 @@ async function run () {
         let pwsh = spawn('pwsh', ['-command', setupPath]);
 
         pwsh.stdout.setEncoding('utf8');
-        pwsh.stdout.on('data', (data) => {
-            if (data) {
-                console.log('"' + data.trim() + '"');
-            }
+        let outReader = readline.createInterface({ input: pwsh.stdin, output: pwsh.stdout });
+        outReader.on('line', (line) => {
+            console.log(line);
         });
 
         pwsh.stderr.setEncoding('utf8');
-        pwsh.stderr.on('data', (data) => {
-            if (data) {
-                console.error(data.trim());
-            }
+        let errReader = readline.createInterface({ input: pwsh.stdin, output: pwsh.stderr });
+        errReader.on('line', (line) => {
+            console.error(line);
         });
 
         pwsh.stdin.end();

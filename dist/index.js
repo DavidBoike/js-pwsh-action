@@ -8281,6 +8281,14 @@ module.exports = eval("require")("encoding");
 
 /***/ }),
 
+/***/ 590:
+/***/ ((module) => {
+
+module.exports = eval("require")("readline/promises");
+
+
+/***/ }),
+
 /***/ 9491:
 /***/ ((module) => {
 
@@ -8453,6 +8461,7 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(5127);
 const github = __nccwpck_require__(3134);
 const path = __nccwpck_require__(1017);
+const readline = __nccwpck_require__(590);
 const { spawn } = __nccwpck_require__(2081);
 
 async function run () {
@@ -8468,17 +8477,15 @@ async function run () {
         let pwsh = spawn('pwsh', ['-command', setupPath]);
 
         pwsh.stdout.setEncoding('utf8');
-        pwsh.stdout.on('data', (data) => {
-            if (data) {
-                console.log('"' + data.trim() + '"');
-            }
+        let outReader = readline.createInterface({ input: pwsh.stdin, output: pwsh.stdout });
+        outReader.on('line', (line) => {
+            console.log(line);
         });
 
         pwsh.stderr.setEncoding('utf8');
-        pwsh.stderr.on('data', (data) => {
-            if (data) {
-                console.error(data.trim());
-            }
+        let errReader = readline.createInterface({ input: pwsh.stdin, output: pwsh.stderr });
+        errReader.on('line', (line) => {
+            console.error(line);
         });
 
         pwsh.stdin.end();
