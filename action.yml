@@ -2,7 +2,7 @@ name: js-pwsh
 description: Test running pwsh via a JS action with a post action
 inputs:
   test-input:
-      description: Test
+      description: Test value
       required: true
 runs:
   using: node12

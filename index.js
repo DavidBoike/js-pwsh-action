@@ -1,20 +1,24 @@
 const core = require('@actions/core');
-const github = require('@actions/github');
 const path = require('path');
 const readline = require('readline');
 const { spawn } = require('child_process');
 
-async function run () {
+async function runPwsh (scriptPath, argsObject) {
     try {
-        const testInput = core.getInput('test-input');
-        core.info('Test Input: ' + testInput);
+        let pwshArgs = ['-command', scriptPath];
 
-        let setupPath = path.join(path.dirname(__dirname), 'setup.ps1');
-        core.info('Setup path: ' + setupPath);
+        if (argsObject) {
+            let keys = Object.getOwnPropertyNames(argsObject);
+            if (keys.length > 0) {
+                pwshArgs.push('--arguments');
+                keys.forEach(key => {
+                    pwshArgs.push('-' + key);
+                    pwshArgs.push(argsObject[key]);
+                });
+            }
+        }
 
-        //let commandArg = '". ' + setupPath + '"';
-
-        let pwsh = spawn('pwsh', ['-command', setupPath]);
+        let pwsh = spawn('pwsh', pwshArgs);
 
         pwsh.stdout.setEncoding('utf8');
         let outReader = readline.createInterface({ input: pwsh.stdout });
@@ -34,9 +38,6 @@ async function run () {
             pwsh.on('close', resolve);
         });
 
-        // outReader.close();
-        // errReader.close();
-
         core.info('Exit code: ' + exitCode);
         if (exitCode) {
             core.setFailed(`pwsh exited with code ${exitCode}`);
@@ -47,4 +48,11 @@ async function run () {
     }
 }
 
-run();
+let setupPath = path.join(path.dirname(__dirname), 'setup.ps1');
+
+const testInput = core.getInput('test-input');
+
+runPwsh(setupPath, {
+    name: 'David',
+    param2: testInput
+});
