@@ -5,17 +5,16 @@ const { spawn } = require('child_process');
 
 async function runPwsh (scriptPath, argsObject) {
     try {
-        let pwshArgs = ['-command', scriptPath];
+
+        // pwsh -File setup.ps1 -name "David Boike" -testInput "Second banana"
+        let pwshArgs = ['-File', scriptPath];
 
         if (argsObject) {
             let keys = Object.getOwnPropertyNames(argsObject);
-            if (keys.length > 0) {
-                pwshArgs.push('--arguments');
-                keys.forEach(key => {
-                    pwshArgs.push('-' + key);
-                    pwshArgs.push(argsObject[key]);
-                });
-            }
+            keys.forEach(key => {
+                pwshArgs.push('-' + key);
+                pwshArgs.push('"' + argsObject[key] + '"');
+            });
         }
 
         console.log(JSON.stringify(pwshArgs));
