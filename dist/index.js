@@ -1750,28 +1750,36 @@ const runPwsh = __nccwpck_require__(841);
 const setupPs1 = path.resolve(__dirname, '../setup.ps1');
 const cleanupPs1 = path.resolve(__dirname, '../cleanup.ps1');
 
+// Only one endpoint, so determine if this is the post action, and set it true so that
+// the next time we're executed, it goes to the post action
 let isPost = core.getState('isPost');
 core.saveState('isPost', true);
 
 async function run() {
 
-    if (!isPost) {
+    try {
 
-        let testInput = core.getInput('test-input');
+        if (!isPost) {
 
-        core.saveState('ValueForPost', 'Postalicious');
+            let testInput = core.getInput('test-input');
 
-        await runPwsh(setupPath, {
-            name: 'David',
-            testInput: testInput
-        });
+            core.saveState('ValueForPost', 'Postalicious');
 
-    } else { // Cleanup
+            await runPwsh(setupPs1, {
+                name: 'David',
+                testInput: testInput
+            });
 
-        let postValue = core.getState('ValueForPost');
+        } else { // Cleanup
 
-        await runPwsh(cleanupPath, { value: postValue });
+            let postValue = core.getState('ValueForPost');
 
+            await runPwsh(cleanupPs1, { value: postValue });
+
+        }
+
+    } catch (err) {
+        core.setFailed(err);
     }
 
 }
