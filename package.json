@@ -20,6 +20,7 @@
   "homepage": "https://github.com/DavidBoike/js-pwsh-action#readme",
   "dependencies": {
     "@actions/core": "^1.6.0",
+    "@actions/exec": "^1.1.0",
     "run-pwsh": "git+https://github.com/DavidBoike/run-pwsh.git#main"
   }
 }

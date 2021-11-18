@@ -1,4 +1,5 @@
 const core = require('@actions/core');
+const exec = require('@actions/exec');
 const path = require('path');
 const runPwsh = require('run-pwsh');
 
@@ -20,16 +21,13 @@ async function run() {
 
             core.saveState('ValueForPost', 'Postalicious');
 
-            await runPwsh(setupPs1, {
-                name: 'David',
-                testInput: testInput
-            });
+            await exec.exec('pwsh', ['-File', setupPs1, '-name', 'David', '-testInput', testInput]);
 
         } else { // Cleanup
 
             let postValue = core.getState('ValueForPost');
 
-            await runPwsh(cleanupPs1, { value: postValue });
+            await exec.exec('pwsh', ['-File', cleanupPs1, '-value', postValue]);
 
         }
 
