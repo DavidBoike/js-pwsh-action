@@ -2542,57 +2542,6 @@ function copyFile(srcFile, destFile, force) {
 
 /***/ }),
 
-/***/ 841:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-const path = __nccwpck_require__(17);
-const readline = __nccwpck_require__(521);
-const { spawn } = __nccwpck_require__(81);
-
-async function runPwsh (scriptPath, argsObject) {
-
-    // pwsh -File setup.ps1 -name "David Boike" -testInput "Second banana"
-    let pwshArgs = ['-File', scriptPath];
-
-    if (argsObject) {
-        let keys = Object.getOwnPropertyNames(argsObject);
-        keys.forEach(key => {
-            pwshArgs.push('-' + key);
-            pwshArgs.push('"' + argsObject[key] + '"');
-        });
-    }
-
-    let pwsh = spawn('pwsh', pwshArgs);
-
-    pwsh.stdout.setEncoding('utf8');
-    let outReader = readline.createInterface({ input: pwsh.stdout });
-    outReader.on('line', (line) => {
-        console.log(line);
-    });
-
-    pwsh.stderr.setEncoding('utf8');
-    let errReader = readline.createInterface({ input: pwsh.stderr });
-    errReader.on('line', (line) => {
-        console.error(line);
-    });
-
-    pwsh.stdin.end();
-
-    const exitCode = await new Promise( (resolve, reject) => {
-        pwsh.on('close', resolve);
-    });
-
-    console.log('Exit code: ' + exitCode);
-    if (exitCode) {
-        throw new Error(`pwsh exited with code ${exitCode}`);
-    }
-}
-
-module.exports = runPwsh;
-
-
-/***/ }),
-
 /***/ 265:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -2873,6 +2822,14 @@ exports.debug = debug; // for test
 
 /***/ }),
 
+/***/ 153:
+/***/ ((module) => {
+
+module.exports = eval("require")("run-pwsh");
+
+
+/***/ }),
+
 /***/ 491:
 /***/ ((module) => {
 
@@ -2942,14 +2899,6 @@ module.exports = require("os");
 
 "use strict";
 module.exports = require("path");
-
-/***/ }),
-
-/***/ 521:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("readline");
 
 /***/ }),
 
@@ -3029,7 +2978,7 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(127);
 const exec = __nccwpck_require__(49);
 const path = __nccwpck_require__(17);
-const runPwsh = __nccwpck_require__(841);
+const runPwsh = __nccwpck_require__(153);
 
 const setupPs1 = path.resolve(__dirname, '../setup.ps1');
 const cleanupPs1 = path.resolve(__dirname, '../cleanup.ps1');
