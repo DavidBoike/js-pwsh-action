@@ -1712,6 +1712,8 @@ async function runPwsh (scriptPath, argsObject) {
             }
         }
 
+        console.log(JSON.stringify(pwshArgs));
+
         let pwsh = spawn('pwsh', pwshArgs);
 
         pwsh.stdout.setEncoding('utf8');
