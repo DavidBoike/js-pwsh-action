@@ -1317,13 +1317,14 @@ async function runPwsh (scriptPath, argsObject) {
         pwsh.on('close', resolve);
     });
 
-    core.info('Exit code: ' + exitCode);
+    console.log('Exit code: ' + exitCode);
     if (exitCode) {
         throw new Error(`pwsh exited with code ${exitCode}`);
     }
 }
 
 module.exports = runPwsh;
+
 
 /***/ }),
 
