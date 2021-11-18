@@ -1752,7 +1752,7 @@ const runPwsh = __nccwpck_require__(841);
 async function run() {
     let cleanupPath = path.resolve(__dirname, '../../cleanup.ps1');
 
-    await runPwsh(setupPath);
+    await runPwsh(cleanupPath);
 }
 
 run();

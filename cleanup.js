@@ -5,7 +5,7 @@ const runPwsh = require('run-pwsh');
 async function run() {
     let cleanupPath = path.resolve(__dirname, '../../cleanup.ps1');
 
-    await runPwsh(setupPath);
+    await runPwsh(cleanupPath);
 }
 
 run();
