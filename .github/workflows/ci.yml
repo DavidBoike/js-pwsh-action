@@ -24,6 +24,11 @@ jobs:
       - name: Run
         uses: ./
         with:
-          test-input: Howdy there
+          test-input: |
+            Howdy there
+
+            That's right, it's multi-lien output.
+
+            Can you dig it?
       - name: Middle step
         run: echo "Should be between Run and Post Run"
