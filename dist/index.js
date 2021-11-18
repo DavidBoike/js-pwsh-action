@@ -8281,14 +8281,6 @@ module.exports = eval("require")("encoding");
 
 /***/ }),
 
-/***/ 590:
-/***/ ((module) => {
-
-module.exports = eval("require")("readline/promises");
-
-
-/***/ }),
-
 /***/ 9491:
 /***/ ((module) => {
 
@@ -8366,6 +8358,14 @@ module.exports = require("path");
 
 "use strict";
 module.exports = require("punycode");
+
+/***/ }),
+
+/***/ 4521:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("readline");
 
 /***/ }),
 
@@ -8461,7 +8461,7 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(5127);
 const github = __nccwpck_require__(3134);
 const path = __nccwpck_require__(1017);
-const readline = __nccwpck_require__(590);
+const readline = __nccwpck_require__(4521);
 const { spawn } = __nccwpck_require__(2081);
 
 async function run () {
@@ -8493,6 +8493,9 @@ async function run () {
         const exitCode = await new Promise( (resolve, reject) => {
             pwsh.on('close', resolve);
         });
+
+        // outReader.close();
+        // errReader.close();
 
         core.info('Exit code: ' + exitCode);
         if (exitCode) {

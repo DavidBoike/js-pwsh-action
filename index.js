@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const path = require('path');
-const readline = require('readline/promises');
+const readline = require('readline');
 const { spawn } = require('child_process');
 
 async function run () {
@@ -33,6 +33,9 @@ async function run () {
         const exitCode = await new Promise( (resolve, reject) => {
             pwsh.on('close', resolve);
         });
+
+        // outReader.close();
+        // errReader.close();
 
         core.info('Exit code: ' + exitCode);
         if (exitCode) {
