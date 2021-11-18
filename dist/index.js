@@ -8477,13 +8477,13 @@ async function run () {
         let pwsh = spawn('pwsh', ['-command', setupPath]);
 
         pwsh.stdout.setEncoding('utf8');
-        let outReader = readline.createInterface({ input: pwsh.stdin, output: pwsh.stdout });
+        let outReader = readline.createInterface({ input: pwsh.stdout });
         outReader.on('line', (line) => {
             console.log(line);
         });
 
         pwsh.stderr.setEncoding('utf8');
-        let errReader = readline.createInterface({ input: pwsh.stdin, output: pwsh.stderr });
+        let errReader = readline.createInterface({ input: pwsh.stderr });
         errReader.on('line', (line) => {
             console.error(line);
         });
