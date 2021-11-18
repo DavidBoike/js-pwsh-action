@@ -25,3 +25,5 @@ jobs:
         uses: ./
         with:
           test-input: Howdy there
+      - name: Middle step
+        run: echo "Should be between Run and Post Run"
