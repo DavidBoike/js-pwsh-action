@@ -2822,14 +2822,6 @@ exports.debug = debug; // for test
 
 /***/ }),
 
-/***/ 153:
-/***/ ((module) => {
-
-module.exports = eval("require")("run-pwsh");
-
-
-/***/ }),
-
 /***/ 491:
 /***/ ((module) => {
 
@@ -2978,7 +2970,6 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(127);
 const exec = __nccwpck_require__(49);
 const path = __nccwpck_require__(17);
-const runPwsh = __nccwpck_require__(153);
 
 const setupPs1 = path.resolve(__dirname, '../setup.ps1');
 const cleanupPs1 = path.resolve(__dirname, '../cleanup.ps1');
