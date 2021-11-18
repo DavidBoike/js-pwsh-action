@@ -1,59 +1,15 @@
 const core = require('@actions/core');
 const path = require('path');
-const readline = require('readline');
-const { spawn } = require('child_process');
+const runPwsh = require('run-pwsh');
 
-async function runPwsh (scriptPath, argsObject) {
-    try {
+async function run() {
+    let setupPath = path.resolve(__dirname, '../setup.ps1');
+    let testInput = core.getInput('test-input');
 
-        // pwsh -File setup.ps1 -name "David Boike" -testInput "Second banana"
-        let pwshArgs = ['-File', scriptPath];
-
-        if (argsObject) {
-            let keys = Object.getOwnPropertyNames(argsObject);
-            keys.forEach(key => {
-                pwshArgs.push('-' + key);
-                pwshArgs.push('"' + argsObject[key] + '"');
-            });
-        }
-
-        console.log(JSON.stringify(pwshArgs));
-
-        let pwsh = spawn('pwsh', pwshArgs);
-
-        pwsh.stdout.setEncoding('utf8');
-        let outReader = readline.createInterface({ input: pwsh.stdout });
-        outReader.on('line', (line) => {
-            console.log(line);
-        });
-
-        pwsh.stderr.setEncoding('utf8');
-        let errReader = readline.createInterface({ input: pwsh.stderr });
-        errReader.on('line', (line) => {
-            console.error(line);
-        });
-
-        pwsh.stdin.end();
-
-        const exitCode = await new Promise( (resolve, reject) => {
-            pwsh.on('close', resolve);
-        });
-
-        core.info('Exit code: ' + exitCode);
-        if (exitCode) {
-            core.setFailed(`pwsh exited with code ${exitCode}`);
-        }
-
-    } catch (error) {
-        core.setFailed(error.message);
-    }
+    await runPwsh(setupPath, {
+        name: 'David',
+        testInput: testInput
+    });
 }
 
-let setupPath = path.join(path.dirname(__dirname), 'setup.ps1');
-
-const testInput = core.getInput('test-input');
-
-runPwsh(setupPath, {
-    name: 'David',
-    testInput: testInput
-});
+run();

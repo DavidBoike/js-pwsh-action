@@ -1275,6 +1275,58 @@ exports.checkBypass = checkBypass;
 
 /***/ }),
 
+/***/ 841:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const path = __nccwpck_require__(17);
+const readline = __nccwpck_require__(521);
+const { spawn } = __nccwpck_require__(81);
+
+async function runPwsh (scriptPath, argsObject) {
+
+    // pwsh -File setup.ps1 -name "David Boike" -testInput "Second banana"
+    let pwshArgs = ['-File', scriptPath];
+
+    if (argsObject) {
+        let keys = Object.getOwnPropertyNames(argsObject);
+        keys.forEach(key => {
+            pwshArgs.push('-' + key);
+            pwshArgs.push('"' + argsObject[key] + '"');
+        });
+    }
+
+    console.log(JSON.stringify(pwshArgs));
+
+    let pwsh = spawn('pwsh', pwshArgs);
+
+    pwsh.stdout.setEncoding('utf8');
+    let outReader = readline.createInterface({ input: pwsh.stdout });
+    outReader.on('line', (line) => {
+        console.log(line);
+    });
+
+    pwsh.stderr.setEncoding('utf8');
+    let errReader = readline.createInterface({ input: pwsh.stderr });
+    errReader.on('line', (line) => {
+        console.error(line);
+    });
+
+    pwsh.stdin.end();
+
+    const exitCode = await new Promise( (resolve, reject) => {
+        pwsh.on('close', resolve);
+    });
+
+    core.info('Exit code: ' + exitCode);
+    if (exitCode) {
+        throw new Error(`pwsh exited with code ${exitCode}`);
+    }
+}
+
+module.exports = runPwsh;
+
+/***/ }),
+
 /***/ 265:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -1694,63 +1746,19 @@ var __webpack_exports__ = {};
 (() => {
 const core = __nccwpck_require__(127);
 const path = __nccwpck_require__(17);
-const readline = __nccwpck_require__(521);
-const { spawn } = __nccwpck_require__(81);
+const runPwsh = __nccwpck_require__(841);
 
-async function runPwsh (scriptPath, argsObject) {
-    try {
+async function run() {
+    let setupPath = path.resolve(__dirname, '../setup.ps1');
+    let testInput = core.getInput('test-input');
 
-        // pwsh -File setup.ps1 -name "David Boike" -testInput "Second banana"
-        let pwshArgs = ['-File', scriptPath];
-
-        if (argsObject) {
-            let keys = Object.getOwnPropertyNames(argsObject);
-            keys.forEach(key => {
-                pwshArgs.push('-' + key);
-                pwshArgs.push('"' + argsObject[key] + '"');
-            });
-        }
-
-        console.log(JSON.stringify(pwshArgs));
-
-        let pwsh = spawn('pwsh', pwshArgs);
-
-        pwsh.stdout.setEncoding('utf8');
-        let outReader = readline.createInterface({ input: pwsh.stdout });
-        outReader.on('line', (line) => {
-            console.log(line);
-        });
-
-        pwsh.stderr.setEncoding('utf8');
-        let errReader = readline.createInterface({ input: pwsh.stderr });
-        errReader.on('line', (line) => {
-            console.error(line);
-        });
-
-        pwsh.stdin.end();
-
-        const exitCode = await new Promise( (resolve, reject) => {
-            pwsh.on('close', resolve);
-        });
-
-        core.info('Exit code: ' + exitCode);
-        if (exitCode) {
-            core.setFailed(`pwsh exited with code ${exitCode}`);
-        }
-
-    } catch (error) {
-        core.setFailed(error.message);
-    }
+    await runPwsh(setupPath, {
+        name: 'David',
+        testInput: testInput
+    });
 }
 
-let setupPath = path.join(path.dirname(__dirname), 'setup.ps1');
-
-const testInput = core.getInput('test-input');
-
-runPwsh(setupPath, {
-    name: 'David',
-    testInput: testInput
-});
+run();
 })();
 
 module.exports = __webpack_exports__;
